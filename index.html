@@ -26,7 +26,12 @@
         };
 
         const assessmentStructure = [
-            {"dimension": "握笔姿势", "item": "抱笔", "options": ["大拇指关节覆盖在笔杆上面", "大拇指指腹覆盖在笔杆上面", "大拇指指尖覆盖在笔杆上面", "大拇指指尖轻靠在笔杆侧面"], "scores": [0, 2, 5, 10]},
+            {"dimension": "握笔姿势", "item": "抱笔", "options": [
+            {text: "大拇指关节包在笔杆上（抱笔/错误）", img: "./images/bb1.png"},
+            {text: "大拇指肚包在笔杆上（抱笔/错误）", img: "./images/bb2.png"},
+            {text: "大拇指尖包在笔杆上（抱笔/错误）", img: "./images/bb3.png"},
+            {text: "大拇指尖轻轻贴在笔杆侧边（正确姿势）", img: "./images/bb4.png"}
+        ], "scores": [0, 2, 5, 10]},
             {"dimension": "握笔姿势", "item": "夹笔", "options": ["笔杆位于虎口且大拇指靠近食指夹紧笔杆", "笔杆位于虎口且大拇指第二节贴近笔杆", "笔杆位于虎口", "笔杆靠在食指根部关节处"], "scores": [0, 2, 5, 10]},
             {"dimension": "握笔姿势", "item": "折指", "options": ["食指第一关节处向笔杆凹陷，弯曲接近90°", "食指第一关节处向笔杆凹陷，弯曲100°-150°之间", "食指第一关节处向笔杆凹陷，弯曲大于150°", "食指第一关节平直或微微隆起呈弧形的状态"], "scores": [0, 2, 5, 10]},
             {"dimension": "握笔姿势", "item": "勾腕", "options": ["笔尖指向左及左下（9点钟及以下方向）", "笔尖指向左上偏下（9点-10点钟之间方向）", "笔尖指向左上（10点-11点钟之间方向）且大拇指第二节与小臂不在一条直线上", "笔尖指向左上偏上（11点-12点钟之间方向）且大拇指第二节与小臂成一条直线"], "scores": [0, 2, 5, 10]},
@@ -75,6 +80,37 @@
             {"dimension": "书写效率", "item": "书写节奏", "options": ["通篇书写过程比较流畅，笔画之间衔接自然，单字内或字与字之间没有明显的停顿、犹豫或反复描笔、补笔。看上去是“写”出来的，不是“画”出来的", "通篇书写过程不流畅，频繁卡顿，经常写一笔停一下，或在一个字上反复涂改、重描。笔画衔接生硬，流畅度极差，看上去写得很费劲，速度也因此很慢"], "scores": [50, 0]},
             {"dimension": "书写效率", "item": "书写速度", "options": ["字迹基本清晰、工整，不影响辨认，速度与质量基本平衡，能够达到或超过相应年龄段数量范围标准：<br>6岁：每分钟书写汉字4-7个<br>7岁：每分钟书写汉字8-10个<br>8岁：每分钟书写汉字11-13个<br>9岁：每分钟书写汉字14-17个<br>10岁：每分钟书写汉字18-20个<br>11岁：每分钟书写汉字21-24个<br>12岁及以上：每分钟书写汉字25个", "书写速度过于缓慢，低于相应年龄段每分钟书写汉字数量标准，完成同样的作业需要花费大量时间，影响学习效率；<br>或者为快而乱，为了追求速度，超过相应年龄段每分钟书写汉字数量标准，字迹变得非常潦草、难以辨认，笔画和结构都严重变形，失去了书写的意义"], "scores": [50, 0]}
         ];
+    // ==============================================
+    // 【修改/新增这里！！！】动态渲染核心代码
+    // 原有遍历渲染代码就在这行附近，直接替换/新增即可
+    // ==============================================
+    assessmentStructure.forEach((section, sectionIndex) => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'assessment-section';
+        // 生成测评维度标题（原有代码可复用，无需修改）
+        sectionDiv.innerHTML = `<h3>${sectionIndex+1}. ${section.dimension} - ${section.item}</h3>`;
+        
+        // 核心修改区：遍历【文字+图片】对象数组，生成带图片的选项
+        section.options.forEach((option, optIndex) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'assessment-option';
+            // 生成「图片+单选框+文字」（直接替换原有纯文字选项的innerHTML）
+            optionDiv.innerHTML = `
+                <label>
+                    <input type="radio" name="item_${sectionIndex}" value="${optIndex}" required>
+                    <img src="${option.img}" alt="${option.text}" class="option-img">
+                    ${option.text}
+                </label>
+            `;
+            sectionDiv.appendChild(optionDiv);
+        });
+
+        // 将生成的测评板块挂载到页面容器（你的原有容器类名，无需修改）
+        document.querySelector('.assessment-container').appendChild(sectionDiv);
+    });
+
+    // 3. 你的其他原有JS代码（计分、提交、付费解锁等，保持不变，无需移动）
+    // ...（比如计算总分、验证表单、解锁高级报告的代码，原样保留在后面）
     </script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
