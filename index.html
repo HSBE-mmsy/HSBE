@@ -5,113 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSBE七维书写能力测评系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .option-img {width: 50vw; max-width: 250px; height: auto; vertical-align: middle; margin-right: 10px; border: none;}
+        .assessment-option {margin: 12px 0;}
+        .assessment-option label {display: block; font-size: 16px; cursor: pointer;}
+        .assessment-option input[type="radio"] {vertical-align: middle; margin-right: 5px;}
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    
-    <!-- 内联数据区 -->
-    <script>
-        const assessmentData = {
-            "assessment_name": "HSBE七维书写能力测评",
-            "dimensions": [
-                {"name": "握笔姿势", "item_count": 10, "max_score": 100},
-                {"name": "书写坐姿", "item_count": 10, "max_score": 100},
-                {"name": "控笔发力", "item_count": 5, "max_score": 100},
-                {"name": "笔画规范", "item_count": 5, "max_score": 100},
-                {"name": "字形结构", "item_count": 5, "max_score": 100},
-                {"name": "章法布局", "item_count": 5, "max_score": 100},
-                {"name": "书写效率", "item_count": 2, "max_score": 100}
-            ],
-            "total_items": 42,
-            "total_max_score": 700
-        };
-
-        const assessmentStructure = [
-            {"dimension": "握笔姿势", "item": "抱笔", "options": [
-            {text: "大拇指关节包在笔杆上（抱笔/错误）", img: "./images/bb1.png"},
-            {text: "大拇指肚包在笔杆上（抱笔/错误）", img: "./images/bb2.png"},
-            {text: "大拇指尖包在笔杆上（抱笔/错误）", img: "./images/bb3.png"},
-            {text: "大拇指尖轻轻贴在笔杆侧边（正确姿势）", img: "./images/bb4.png"}
-        ], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "夹笔", "options": ["笔杆位于虎口且大拇指靠近食指夹紧笔杆", "笔杆位于虎口且大拇指第二节贴近笔杆", "笔杆位于虎口", "笔杆靠在食指根部关节处"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "折指", "options": ["食指第一关节处向笔杆凹陷，弯曲接近90°", "食指第一关节处向笔杆凹陷，弯曲100°-150°之间", "食指第一关节处向笔杆凹陷，弯曲大于150°", "食指第一关节平直或微微隆起呈弧形的状态"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "勾腕", "options": ["笔尖指向左及左下（9点钟及以下方向）", "笔尖指向左上偏下（9点-10点钟之间方向）", "笔尖指向左上（10点-11点钟之间方向）且大拇指第二节与小臂不在一条直线上", "笔尖指向左上偏上（11点-12点钟之间方向）且大拇指第二节与小臂成一条直线"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "蜷指", "options": ["中指、无名指、小拇指其中有两指蜷缩，指尖紧贴掌心", "无名指、小拇指其中有一指蜷缩，指尖贴近掌心", "小拇指蜷缩，指尖贴近掌心", "无名指小拇指自然弯曲、并拢，垫于中指下面"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "翘腕", "options": ["腕骨支撑点离开桌面两根手指及以上的高度", "腕骨支撑点离开桌面1到2根手指的高度", "腕骨支撑点离开桌面小于1根手指的高度", "腕骨支撑点没有离开桌面"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "躺指", "options": ["中指、无名指、小拇指三根手指的侧背面接触桌面", "无名指、小拇指两根手指的侧背面接触桌面", "小拇指的侧背面接触桌面", "仅小拇指指尖外侧轻触桌面"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "过伸", "options": ["书写状态下有三根及以上手指伸直", "书写状态下有两根手指伸直", "书写状态下有一根手指伸直", "书写状态下所有手指都是自然弯曲的"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "垫笔定位", "options": ["笔杆垫在中指的第一关节以上部分", "笔杆垫在中指的第一关节处", "笔杆垫在中指的第一关节下与指甲无接触", "笔杆垫在中指的指甲根部侧面"], "scores": [0, 2, 5, 10]},
-            {"dimension": "握笔姿势", "item": "执笔距离", "options": ["大拇指、食指、中指的指尖与笔尖紧挨着或者距离大于四根手指的宽度", "大拇指、食指、中指的指尖与笔尖的距离小于一根手指或大于三根手指的宽度", "大拇指、食指、中指的指尖与笔尖的距离大于一根手指或小于三根手指但不是两根手指的宽度", "大拇指、食指、中指的指尖与笔尖的距离刚好两根手指的宽度"], "scores": [0, 2, 5, 10]},
-            
-            {"dimension": "书写坐姿", "item": "背部形态", "options": ["背部基本挺直，无弯腰驼背前倾", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "双手位置", "options": ["两手小臂摆放于桌面呈\"八字形\"", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "双脚形态", "options": ["双脚平放地面，脚踏实地，与肩同宽", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "头部形态", "options": ["头部端正，微微前倾，无左右歪斜", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "肩部形态", "options": ["双肩放松，自然下垂", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "桌身距离", "options": ["胸部距桌沿一拳距离或胸前衣服不挨桌沿", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "胳膊肘位置", "options": ["两只胳膊肘肘尖均露出桌沿外约一拳长度", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "臀膝踝角度", "options": ["臀部、膝盖、脚踝均呈90°", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "放松程度", "options": ["身体各部位均放松自然", "不是以上姿态"], "scores": [10, 0]},
-            {"dimension": "书写坐姿", "item": "稳定程度", "options": ["坐姿稳定，不轻易挪动，坐如钟，不摇晃", "不是以上姿态"], "scores": [10, 0]},
-            
-            {"dimension": "控笔发力", "item": "横摆竖拉", "options": ["横向笔画是通过向外摆动手腕画出，且竖向笔画是通过从上向下伸缩拉动手指画出", "横摆手腕、竖拉手指，横向和竖向笔画其中有一个是控笔发力方向正确对的", "横向笔画用伸缩手指画出、竖向笔画用向内摆动手腕或掌关节画出，横向笔画竖向笔画的发力方向均不对"], "scores": [20, 10, 0]},
-            {"dimension": "控笔发力", "item": "斜向联动", "options": ["撇（往左下）向笔画是通过向内摆动手腕画出，且捺（往右下）向笔画是通过向掌心伸缩拉动手指画出", "撇动手腕、捺动手指，撇向笔画和捺向笔画其中有一个是控笔发力方向正确对的", "撇向笔画用手指向左下前拱画出、捺向笔画用手向右下拖拽画出，撇向笔画捺向笔画的发力方向均不对"], "scores": [20, 10, 0]},
-            {"dimension": "控笔发力", "item": "钩提弹挑", "options": ["钩画短小，用中指将笔向左上或上方弹起出尖；提画稍长，用手腕将笔向右上方摆起出尖", "钩画、提画动作只有其中一个是正确的", "钩画、提画动作均不正确"], "scores": [20, 10, 0]},
-            {"dimension": "控笔发力", "item": "轻重缓急", "options": ["能灵活准确地控制笔尖的轻重和快慢，能清楚地看到笔画的粗细变化和尖脚顿弧", "勉强能控制笔尖的轻重和快慢，偶尔能看到笔画的粗细变化和尖脚顿弧", "不能控制笔尖的轻重和快慢，完全看不到笔画的粗细变化和尖脚顿弧"], "scores": [20, 10, 0]},
-            {"dimension": "控笔发力", "item": "运笔轻松", "options": ["手指手腕灵活，肌肉放松，运笔轻松自如、力度适中，笔迹均匀不浓不淡，铅笔书写背面整个笔画无凸痕", "手指手腕肌肉稍紧，不能完全灵活放松，运笔力度控制不稳，笔迹偏浓或偏淡，铅笔书写背面笔画起笔收笔处有凸痕", "肌肉僵硬、手指手腕紧张不灵活，运笔力度大，笔迹浓重，铅笔书写背面整个笔画有凸痕"], "scores": [20, 10, 0]},
-
-            {"dimension": "笔画规范", "item": "形态精准度", "options": ["笔画横平、竖直；撇有尖、捺有脚，均有弧度；折有棱角、弯有圆弧；点画大小合适、角度正确；钩短提长且有尖，指向正确；掌握‘垂露竖’、‘悬针竖’、‘长横’、‘短横’等不同变体的标准写法", "横不平、竖不直、撇无尖、捺无脚、折无棱、弯不圆、点画大小不对、点画角度不对、钩长、提短、钩提无尖、钩提方向不对、基本笔画的变体书写不准确，笔画形态有其中任意一种或多种情况"], "scores": [20,  0]},
-            {"dimension": "笔画规范", "item": "笔法完整度", "options": ["起笔干净，不拖泥带水；行笔流畅平稳，没有歪扭抖动；收笔到位，没有多余的长度和角度。这是区分“画字”和“写字”的关键。", "起笔不干净，拖泥带水；行笔不流畅平稳，笔画出现歪扭抖动；收笔不到位，过长或过短、该有尖脚时无尖脚或尖脚过长变向；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
-            {"dimension": "笔画规范", "item": "空间位置感", "options": ["笔画落在关键的参照线上；平行笔画间的距离均匀；笔画间的交叉、连接点位置准确", "笔画空间位置比较随意，没有落在关键的参照线上；平行笔画间的距离不均匀；笔画间的交叉、连接点位置不准确；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
-            {"dimension": "笔画规范", "item": "关系与比例", "options": ["主要笔画（主笔）突出；多横、多竖、多撇、多点之间的长短变化与排列有规律；笔画搭配产生恰当的收敛紧凑，舒展豪放的“收放”效果", "主笔没有突出；相同笔画之间的长短变化与排列杂乱无序、毫无规律；笔画搭配缺乏明显的主笔伸展或辅助笔画收缩的状态，全都挤在一起，或者散的七零八落；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
-            {"dimension": "笔画规范", "item": "笔顺与笔势", "options": ["遵守笔顺规则（如“先横后竖”、“先撇后捺”、“从左到右”、“从上到下”...），书写顺序正确；前一笔的收笔与后一笔的起笔存在内在的衔接趋势（笔断意连）", "不能遵守笔顺规则，书写顺序不正确，又称倒笔画；前一笔的收笔与后一笔的起笔不存在内在的衔接趋势（笔断意连）；笔画书写有其中任意一种或多种情况"], "scores": [20, 0]},
-            
-            {"dimension": "字形结构", "item": "重心与稳定", "options": ["字形视觉上端正平稳，无歪斜感。无论是独体字还是复杂结构，重心都处理得当，在格线中“站得稳”。笔画穿插后整体依然平衡", "字形基本端正，但部分字或复杂结构略有歪斜、不稳的迹象。可能有个别笔画方向不当（如横画过斜），轻微影响了整体平衡", "字形明显歪斜、倾倒，或头重脚轻、左高右低等问题突出，视觉上失衡感强烈。结构松散，难以找到稳定的重心"], "scores": [20, 5, 0]},
-            {"dimension": "字形结构", "item": "比例与协调", "options": ["字的部件（偏旁部首）之间大小、宽窄、高低关系明确且和谐。严格遵循“左紧右松”、“上紧下松”等结构规律，搭配美观", "部件比例基本正确，但存在局部失调。例如左右部分宽窄对比不够明确，或上下部分大小关系略有不当，整体略显呆板或局促", "部件比例严重失调。如左右结构的字写得左右等宽，上下结构的字上下等大，或某个部件过大/过小，导致字形怪异、不协调"], "scores": [20, 5, 0]},
-            {"dimension": "字形结构", "item": "疏密与布白", "options": ["笔画与部件间的空间分布均匀、透气，“计白当黑”意识强。穿插避让自然合理，疏密对比得当，笔画之间的空白要分布均匀，既不过于拥挤也不过于松散", "空间安排基本合理，但存在局部疏密不均<br>例如笔画密集处略显拥挤，或笔画稀疏处过于松散，整体空间感不够匀称、生动", "空间分布混乱<br>要么笔画全挤在一起，字形密不透风；要么笔画支离分散，结构松散<br>缺乏基本的穿插避让意识"], "scores": [20, 5, 0]},
-            {"dimension": "字形结构", "item": "收放与主次", "options": ["主笔（关键笔画）突出、舒展有力，次笔画相对收敛。收放对比明显，形成清晰的节奏感和视觉中心，字显得精神、有活力", "能识别主笔，但表现不够舒展或力度不足；收放对比较弱，笔画趋向于长短、力度平均，字形略显平淡，缺乏神采", "完全没有收放意识，所有笔画长短、力度相似。或主次颠倒，次要笔画过于张扬，导致字形结构紊乱、特征模糊"], "scores": [20, 5, 0]},
-            {"dimension": "字形结构", "item": "统一与规范", "options": ["单字结构符合该字的常规书写规范，且在全篇书写中，字的大小、风格高度协调统一，整体感强。快写时结构特征也能保持。字与字之间的大小关系协调，以及单字结构符合该字的常规书写规范", "单字结构基本规范，但在全篇中，字的大小控制不稳（忽大忽小），或同类结构的字写法不统一<br>快写时容易出现结构变形", "单字结构存在明显不规范写法，或自造字形<br>通篇字大小失控、风格各异，杂乱无章，缺乏整体和谐感"], "scores": [20, 5, 0]},
-            
-            {"dimension": "章法布局", "item": "字间关系", "options": ["通篇字与字之间的字距空隙大小基本一致，间隔均匀，无任何偏差，字的重心横向呈直线", "大部分字距均匀合适，不影响整齐度，行列可识别，但有的地方字挤在一起，有的地方又隔得太开，显得松紧不一", "字距毫无规律，有的紧得看不清，有的松得断了联系，整行字显得杂乱，存在字体重叠或间距过宽，行列混乱"], "scores": [20, 5, 0]},
-            {"dimension": "章法布局", "item": "行距清晰", "options": ["通篇行与行之间的行距空白清晰、宽度一致，各行文字互不干扰，无压线，纵向平行，界限清晰", "行距基本存在，但宽窄不一，或者个别行的笔画与上下行挨得太近，略有交叉感<br>轻微压线、偏差，无整行重叠，行列可区分，大部分清晰", "行距模糊不清，行与行的字都挤在一起，甚至笔画相互打架，难以区分每一行<br>多处压线，存在整行重叠，行列无法识别"], "scores": [20, 5, 0]},
-            {"dimension": "章法布局", "item": "整体协调", "options": ["通篇字的大小、高矮完全统一、重心全居中、书写风格非常一致，看起来和谐舒服，整体布局协调，浑然一体", "单个字写得不错，但通篇看去，字忽大忽小，或有的歪有的正，重心轻微偏侧，无极端突兀字，无明显违和，整体感稍差，不算杂乱", "字的大小差异悬殊，书写风格（如轻重、胖瘦）不一，整篇看起来杂乱无章<br>多个字偏差，存在超大、超小、严重歪斜字，整体杂乱不协调"], "scores": [20, 5, 0]},
-            {"dimension": "章法布局", "item": "留白合理", "options": ["页面和单个格子四周（上下左右）留出的边白宽度合适，边距均等，分布均匀，疏密有致。<br>段落开头空两格规范，整体布局看起来舒服、透气", "留边有意识，但可能一边宽一边窄，或顶天立地写得太满，段落开头空格不规范。<br>无撑边、缺边，留白无失衡，不影响观感", "几乎没有留边，字写到纸或格子的边缘；<br>或者留白过多，字缩在中间一小团；段落格式混乱；<br>边距偏差大，严重撑边、缺边，留白严重失衡"], "scores": [20, 5, 0]},
-            {"dimension": "章法布局", "item": "卷面整洁", "options": ["页面干净，无不必要的涂改、墨渍。修改处使用规范修改符号，不影响阅读。无任何涂改、划痕、污渍，无多余描笔、连笔，页面整洁", "整面有3次以内的少量用橡皮或涂改液修改的痕迹，但整体不影响观感，无划痕、污渍，无大面积涂黑、反复描改，卷面可识别，基本上整洁", "涂改、擦抹、污渍较多，有大面积涂黑、划痕、污渍，页面看起来脏兮兮、乱糟糟的，影响阅读和美观"], "scores": [20, 5, 0]},
-            
-            {"dimension": "书写效率", "item": "书写节奏", "options": ["通篇书写过程比较流畅，笔画之间衔接自然，单字内或字与字之间没有明显的停顿、犹豫或反复描笔、补笔。看上去是“写”出来的，不是“画”出来的", "通篇书写过程不流畅，频繁卡顿，经常写一笔停一下，或在一个字上反复涂改、重描。笔画衔接生硬，流畅度极差，看上去写得很费劲，速度也因此很慢"], "scores": [50, 0]},
-            {"dimension": "书写效率", "item": "书写速度", "options": ["字迹基本清晰、工整，不影响辨认，速度与质量基本平衡，能够达到或超过相应年龄段数量范围标准：<br>6岁：每分钟书写汉字4-7个<br>7岁：每分钟书写汉字8-10个<br>8岁：每分钟书写汉字11-13个<br>9岁：每分钟书写汉字14-17个<br>10岁：每分钟书写汉字18-20个<br>11岁：每分钟书写汉字21-24个<br>12岁及以上：每分钟书写汉字25个", "书写速度过于缓慢，低于相应年龄段每分钟书写汉字数量标准，完成同样的作业需要花费大量时间，影响学习效率；<br>或者为快而乱，为了追求速度，超过相应年龄段每分钟书写汉字数量标准，字迹变得非常潦草、难以辨认，笔画和结构都严重变形，失去了书写的意义"], "scores": [50, 0]}
-        ];
-    // ==============================================
-    // 【修改/新增这里！！！】动态渲染核心代码
-    // 原有遍历渲染代码就在这行附近，直接替换/新增即可
-    // ==============================================
-    assessmentStructure.forEach((section, sectionIndex) => {
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'assessment-section';
-        // 生成测评维度标题（原有代码可复用，无需修改）
-        sectionDiv.innerHTML = `<h3>${sectionIndex+1}. ${section.dimension} - ${section.item}</h3>`;
-        
-        // 核心修改区：遍历【文字+图片】对象数组，生成带图片的选项
-        section.options.forEach((option, optIndex) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'assessment-option';
-            // 生成「图片+单选框+文字」（直接替换原有纯文字选项的innerHTML）
-            optionDiv.innerHTML = `
-                <label>
-                    <input type="radio" name="item_${sectionIndex}" value="${optIndex}" required>
-                    <img src="${option.img}" alt="${option.text}" class="option-img">
-                    ${option.text}
-                </label>
-            `;
-            sectionDiv.appendChild(optionDiv);
-        });
-
-        // 将生成的测评板块挂载到页面容器（你的原有容器类名，无需修改）
-        document.querySelector('.assessment-container').appendChild(sectionDiv);
-    });
-
-    // 3. 你的其他原有JS代码（计分、提交、付费解锁等，保持不变，无需移动）
-    // ...（比如计算总分、验证表单、解锁高级报告的代码，原样保留在后面）
-    </script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
     <!-- 顶部导航 -->
@@ -161,50 +62,49 @@
             </div>
         </section>
 
-<!-- 用户信息收集 -->
-<section id="userInfoScreen" class="bg-white rounded-xl shadow-lg p-8 mb-8 hidden">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">测评对象信息</h2>
-    <form id="userInfoForm" class="space-y-6">
-        <!-- 第一行：姓名 + 性别 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">姓名<span class="text-red-500">*</span></label>
-                <input type="text" id="studentName" name="studentName" required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
-            </div>
-            <div>
-                <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">性别<span class="text-red-500">*</span></label>
-                <select id="gender" name="gender" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <!-- 空选项，引导用户选择 -->
-                    <option value="" disabled selected>请选择性别</option>
-                    <option value="男">男</option>
-                    <option value="女">女</option>
-                </select>
-            </div>
-        </div>
-        
-<!-- 第二行：年龄 + 测评日期（和姓名/性别宽度一致，均设为必填） -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-        <label for="studentAge" class="block text-sm font-medium text-gray-700 mb-1">年龄 <span class="text-red-500">*</span></label>
-        <input type="number" id="studentAge" name="studentAge" min="5" max="80" required
-               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors"
-               placeholder="请输入书写人的真实年龄">
-    </div>
-    <div>
-        <label for="assessmentDate" class="block text-sm font-medium text-gray-700 mb-1">测评日期 <span class="text-red-500">*</span></label>
-        <input type="date" id="assessmentDate" name="assessmentDate" required
-               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
-    </div>
-</div>
-        
-        <!-- 第三行：备注信息（单独一行） -->
-        <div>
-            <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">备注信息</label>
-            <textarea id="notes" name="notes" rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors"></textarea>
-        </div>
+        <!-- 用户信息收集 -->
+        <section id="userInfoScreen" class="bg-white rounded-xl shadow-lg p-8 mb-8 hidden">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">测评对象信息</h2>
+            <form id="userInfoForm" class="space-y-6">
+                <!-- 第一行：姓名 + 性别 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">姓名<span class="text-red-500">*</span></label>
+                        <input type="text" id="studentName" name="studentName" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">性别<span class="text-red-500">*</span></label>
+                        <select id="gender" name="gender" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            <option value="" disabled selected>请选择性别</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 第二行：年龄 + 测评日期 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="studentAge" class="block text-sm font-medium text-gray-700 mb-1">年龄 <span class="text-red-500">*</span></label>
+                        <input type="number" id="studentAge" name="studentAge" min="5" max="80" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                               placeholder="请输入书写人的真实年龄">
+                    </div>
+                    <div>
+                        <label for="assessmentDate" class="block text-sm font-medium text-gray-700 mb-1">测评日期 <span class="text-red-500">*</span></label>
+                        <input type="date" id="assessmentDate" name="assessmentDate" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+                
+                <!-- 第三行：备注信息 -->
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">备注信息</label>
+                    <textarea id="notes" name="notes" rows="3"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors"></textarea>
+                </div>
                 <div class="flex justify-end">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         下一步
@@ -212,6 +112,7 @@
                 </div>
             </form>
         </section>
+
         <!-- 测评界面 -->
         <section id="assessmentScreen" class="bg-white rounded-xl shadow-lg p-8 mb-8 hidden">
             <!-- 进度条 -->
@@ -248,116 +149,116 @@
             </div>
         </section>
 
-<!-- 结果展示 -->
-<section id="resultsScreen" class="bg-white rounded-xl shadow-lg p-8 mb-8 hidden">
-    <div class="text-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">测评完成</h2>
-        <p class="text-gray-600">以下是测评结果分析</p>
-    </div>
+        <!-- 结果展示 -->
+        <section id="resultsScreen" class="bg-white rounded-xl shadow-lg p-8 mb-8 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">测评完成</h2>
+                <p class="text-gray-600">以下是测评结果分析</p>
+            </div>
 
-    <!-- 免费可见：总分+等级 -->
-    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-white mb-8 text-center">
-        <div class="inline-flex items-center justify-center w-24 h-24 bg-white bg-opacity-20 rounded-full mb-4">
-            <span id="totalScore" class="text-4xl font-bold">0</span>
-            <span class="text-xl font-bold ml-1">/700</span>
-        </div>
-        <h3 class="text-2xl font-bold mb-2">总体得分</h3>
-        <p id="scoreLevel" class="text-lg opacity-90">优秀</p>
-    </div>
+            <!-- 免费可见：总分+等级 -->
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-white mb-8 text-center">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-white bg-opacity-20 rounded-full mb-4">
+                    <span id="totalScore" class="text-4xl font-bold">0</span>
+                    <span class="text-xl font-bold ml-1">/700</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">总体得分</h3>
+                <p id="scoreLevel" class="text-lg font-semibold px-4 py-1 rounded-full inline-block">优秀</p>
+            </div>
 
-    <!-- 付费提示（未付费时显示，付费后隐藏） -->
-    <div id="payPrompt" class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-6 mb-8 text-center">
-        <h4 class="text-lg font-semibold text-amber-800 mb-4">
-            <i class="fas fa-lock text-amber-600 mr-2"></i>
-            解锁高级测评报告
-        </h4>
-        <p class="text-amber-700 mb-6">付费后可查看：各维度详细得分、雷达图/柱状图分析、针对性测评建议、打印/导出报告功能</p>
-        <button id="unlockBtn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50">
-            立即解锁（¥9.9）
-        </button>
-    </div>
+            <!-- 付费提示 -->
+            <div id="payPrompt" class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-6 mb-8 text-center">
+                <h4 class="text-lg font-semibold text-amber-800 mb-4">
+                    <i class="fas fa-lock text-amber-600 mr-2"></i>
+                    解锁高级测评报告
+                </h4>
+                <p class="text-amber-700 mb-6">付费后可查看：各维度详细得分、雷达图/柱状图分析、针对性改进建议、打印/导出报告功能</p>
+                <button id="unlockBtn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50">
+                    立即解锁（¥9.9）
+                </button>
+            </div>
 
-    <!-- 付费解锁内容（默认隐藏） -->
-    <div id="paidContent" class="hidden">
-        <!-- 图表区域 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <!-- 雷达图 -->
-            <div class="bg-gray-50 rounded-xl p-6">
-                <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">各维度得分分布</h4>
-                <div class="relative h-80">
-                    <canvas id="radarChart"></canvas>
+            <!-- 付费解锁内容 -->
+            <div id="paidContent" class="hidden">
+                <!-- 图表区域 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- 雷达图 -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">各维度得分分布</h4>
+                        <div class="relative h-80">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 柱状图 -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">各维度得分对比</h4>
+                        <div class="relative h-80">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 详细得分表 -->
+                <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">详细得分表</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">维度</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">得分</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">满分</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">百分比</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">等级</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scoreTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- 动态生成的得分表 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 测评建议 -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-6 mb-8">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        测评建议
+                    </h4>
+                    <div id="assessmentAdvice" class="text-gray-700 space-y-2">
+                        <!-- 动态生成的建议 -->
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="printBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                        <i class="fas fa-print mr-2"></i>打印报告
+                    </button>
+                    <button id="exportBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        <i class="fas fa-download mr-2"></i>导出数据
+                    </button>
+                    <button id="newAssessmentBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        <i class="fas fa-plus mr-2"></i>新测评
+                    </button>
                 </div>
             </div>
 
-            <!-- 柱状图 -->
-            <div class="bg-gray-50 rounded-xl p-6">
-                <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">各维度得分对比</h4>
-                <div class="relative h-80">
-                    <canvas id="barChart"></canvas>
-                </div>
+            <!-- 免费版仅显示“新测评”按钮 -->
+            <div id="freeNewAssessmentBtn" class="flex justify-center">
+                <button id="freeNewBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    <i class="fas fa-plus mr-2"></i>新测评
+                </button>
             </div>
-        </div>
-
-        <!-- 详细得分表 -->
-        <div class="bg-gray-50 rounded-xl p-6 mb-8">
-            <h4 class="text-lg font-semibold text-gray-900 mb-4">详细得分表</h4>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">维度</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">得分</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">满分</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">百分比</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">等级</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scoreTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- 动态生成的得分表 -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 测评建议 -->
-        <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-6 mb-8">
-            <h4 class="text-lg font-semibold text-gray-900 mb-4">
-                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
-                测评建议
-            </h4>
-            <div id="assessmentAdvice" class="text-gray-700 space-y-2">
-                <!-- 动态生成的建议 -->
-            </div>
-        </div>
-
-        <!-- 操作按钮 -->
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <button id="printBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
-                <i class="fas fa-print mr-2"></i>打印报告
-            </button>
-            <button id="exportBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                <i class="fas fa-download mr-2"></i>导出数据
-            </button>
-            <button id="newAssessmentBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                <i class="fas fa-plus mr-2"></i>新测评
-            </button>
-        </div>
-    </div>
-
-    <!-- 免费版仅显示“新测评”按钮 -->
-    <div id="freeNewAssessmentBtn" class="flex justify-center hidden">
-        <button id="freeNewBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-            <i class="fas fa-plus mr-2"></i>新测评
-        </button>
-    </div>
-</section>
+        </section>
     </main>
 
     <!-- 页脚 -->
     <footer class="bg-white border-t border-gray-200 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="text-center text-gray-500 text-sm">
-                <p>© 2024 HSBE七维书写能力测评系统 | 专业的书写能力评估工具</p>
+                <p>© 2026 HSBE七维书写能力测评系统 | 专业的书写能力评估工具</p>
             </div>
         </div>
     </footer>
@@ -379,28 +280,28 @@
                 <div>
                     <h4 class="text-lg font-semibold text-gray-900 mb-2">测评的七个维度包括：</h4>
                     <ul class="list-disc list-inside space-y-1 ml-4">
-                        <li><strong>握笔姿势</strong>：评估书写者握笔姿势的正确性、健康性和规范性</li>
-                        <li><strong>坐姿</strong>：评估书写者书写时的坐姿是否正确、是否合理、是否利于健康、是否利于操作</li>
-                        <li><strong>控笔发力</strong>：评估书写者对笔的控制能力和发力技巧</li>
-                        <li><strong>笔画规范</strong>：评估基本笔画的规范性</li>
-                        <li><strong>字形结构</strong>：评估汉字结构的合理性</li>
-                        <li><strong>章法布局</strong>：评估整体书写布局的协调性</li>
-                        <li><strong>书写效率</strong>：评估书写的速度和连贯性</li>
+                        <li><strong>握笔姿势</strong>：通过抱笔、夹笔、折指等10项核心指标，评估书写者握笔姿势的正确性、健康性和规范性</li>
+                        <li><strong>坐姿</strong>：通过背部、手部、脚部等10项核心指标，评估书写者书写时的坐姿是否正确、是否合理、是否利于健康、是否利于操作</li>
+                        <li><strong>控笔发力</strong>：通过横摆竖拉、斜向联动等5项核心指标，评估书写者对笔的控制能力和发力技巧</li>
+                        <li><strong>笔画规范</strong>：通过形态、笔法、空间位置等5项核心指标，评估基本笔画的规范性</li>
+                        <li><strong>字形结构</strong>：通过重心、比例、疏密等5项核心指标，评估汉字结构的合理性</li>
+                        <li><strong>章法布局</strong>：通过字距、行距、留白等5项核心指标，评估整体书写布局的协调性</li>
+                        <li><strong>书写效率</strong>：通过书写节奏和书写效率2项核心指标，评估书写的速度、连贯性和流畅性</li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold text-gray-900 mb-2">如何使用本系统？</h4>
                     <ol class="list-decimal list-inside space-y-1 ml-4">
-                        <li>点击"开始测评"按钮</li>
+                        <li>选择测评模式（完整/单维度），点击"开始测评"按钮</li>
                         <li>填写测评对象的基本信息</li>
-                        <li>按照系统提示，依次选择最贴近书写者真实书写状态的选项，完成每个维度的评分</li>
-                        <li>查看测评结果和分析报告</li>
-                        <li>可选择打印报告或导出数据</li>
+                        <li>按照系统提示，依次选择最贴近书写者真实书写状态的选项，完成每个维度的选项选择</li>
+                        <li>完成所有维度测评后，免费查看所得总分和等级评价</li>
+                        <li>付费解锁后可查看测评结果的详细报告、图表分析和改进建议，可选择打印或保存报告，以及导出数据</li>
                     </ol>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold text-gray-900 mb-2">评分标准说明：</h4>
-                    <p>每个项目根据表现情况给予相应分数，分数越高表示表现越好。系统会自动计算总分并生成分析报告。</p>
+                    <p>每个项目根据表现情况给予相应分数，分数越高表示表现越好。总分700分，等级划分：优秀（600+）、良好（500-599）、中等（400-499）、待提升（300-399）、需改进（300以下）。系统会自动计算各维度得分和总分，生成分析报告，并针对得分低的维度给出具体指导建以供参考。</p>
                 </div>
             </div>
             <div class="mt-8 text-center">
@@ -411,533 +312,617 @@
         </div>
     </div>
 
+    <!-- 核心脚本 -->
     <script>
-        // 全局变量
-        let currentDimensionIndex = 0;
-        let assessmentResults = {};
-        let userInfo = {};
-        // 新增：付费状态（默认未付费）
-        let isPaid = false;
-
-        // DOM 元素
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        const userInfoScreen = document.getElementById('userInfoScreen');
-        const assessmentScreen = document.getElementById('assessmentScreen');
-        const resultsScreen = document.getElementById('resultsScreen');
-        const startBtn = document.getElementById('startBtn');
-        const userInfoForm = document.getElementById('userInfoForm');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const finishBtn = document.getElementById('finishBtn');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const currentDimension = document.getElementById('currentDimension');
-        const dimensionScore = document.getElementById('dimensionScore');
-        const dimensionContent = document.getElementById('dimensionContent');
-        const helpBtn = document.getElementById('helpBtn');
-        const helpModal = document.getElementById('helpModal');
-        const closeHelpBtn = document.getElementById('closeHelpBtn');
-        const closeHelpBtn2 = document.getElementById('closeHelpBtn2');
-        const printBtn = document.getElementById('printBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        const newAssessmentBtn = document.getElementById('newAssessmentBtn');
-
-        // 初始化
+        // 确保DOM加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 设置默认日期
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('assessmentDate').value = today;
-
-            // 事件监听
-            startBtn.addEventListener('click', startAssessment);
-            userInfoForm.addEventListener('submit', handleUserInfoSubmit);
-            prevBtn.addEventListener('click', goToPrevDimension);
-            nextBtn.addEventListener('click', goToNextDimension);
-            finishBtn.addEventListener('click', showResults);
-            helpBtn.addEventListener('click', showHelp);
-            closeHelpBtn.addEventListener('click', hideHelp);
-            closeHelpBtn2.addEventListener('click', hideHelp);
-            printBtn.addEventListener('click', printReport);
-            exportBtn.addEventListener('click', exportData);
-            newAssessmentBtn.addEventListener('click', startNewAssessment);
-            // 绑定付费解锁按钮事件
-const unlockBtn = document.getElementById('unlockBtn');
-if (unlockBtn) {
-    unlockBtn.addEventListener('click', unlockPaidFeatures);
-}
-
-// 绑定免费版新测评按钮事件
-const freeNewBtn = document.getElementById('freeNewBtn');
-if (freeNewBtn) {
-    freeNewBtn.addEventListener('click', freeNewAssessment);
-}
-        });
-
-        // 开始测评
-        function startAssessment() {
-            welcomeScreen.classList.add('hidden');
-            userInfoScreen.classList.remove('hidden');
-        }
-
-        // 处理用户信息提交
-        function handleUserInfoSubmit(e) {
-            e.preventDefault();
-            
-            // 收集用户信息
-            userInfo = {
-                name: document.getElementById('studentName').value,
-                className: document.getElementById('gender').value,
-                date: document.getElementById('assessmentDate').value,
-                age: document.getElementById('studentAge').value,
-                notes: document.getElementById('notes').value
+            // 1. 基础数据定义（补全闭合，避免语法错误）
+            const assessmentData = {
+                "assessment_name": "HSBE七维书写能力测评",
+                "dimensions": [
+                    {"name": "握笔姿势", "item_count": 10, "max_score": 100},
+                    {"name": "书写坐姿", "item_count": 10, "max_score": 100},
+                    {"name": "控笔发力", "item_count": 5, "max_score": 100},
+                    {"name": "笔画规范", "item_count": 5, "max_score": 100},
+                    {"name": "字形结构", "item_count": 5, "max_score": 100},
+                    {"name": "章法布局", "item_count": 5, "max_score": 100},
+                    {"name": "书写效率", "item_count": 2, "max_score": 100}
+                ],
+                "total_items": 42,
+                "total_max_score": 700
             };
 
-            // 初始化测评结果
-            assessmentResults = {
-                userInfo: userInfo,
-                dimensionScores: {},
-                totalScore: 0
-            };
+            const assessmentStructure = [
+                {"dimension": "握笔姿势", "item": "抱笔", "options": [
+                    {text: "大拇指关节包在笔杆上", img: "./images/bb1.png"},
+                    {text: "大拇指肚包在笔杆上", img: "./images/bb2.png"},
+                    {text: "大拇指尖包在笔杆上", img: "./images/bb3.png"},
+                    {text: "大拇指尖轻轻贴在笔杆侧边", img: "./images/bb4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "夹笔", "options": [
+                    {text: "笔杆位于虎口且大拇指靠近食指夹紧笔杆", img: "./images/jb1.png"},
+                    {text: "笔杆位于虎口且大拇指第二节贴近笔杆", img: "./images/jb2.png"},
+                    {text: "笔杆位于虎口处", img: "./images/jb3.png"}, 
+                    {text: "笔杆靠在食指根部关节处", img: "./images/jb4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "折指", "options": [
+                    {text: "食指第一关节处向笔杆凹陷，弯曲接近90°", img: "./images/zz1.png"},
+                    {text: "食指第一关节处向笔杆凹陷，弯曲100°-150°之间", img: "./images/zz2.png"},
+                    {text: "食指第一关节处向笔杆凹陷，弯曲大于150°", img: "./images/zz3.png"}, 
+                    {text: "食指第一关节平直或微微隆起呈弧形的状态", img: "./images/zz3.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "勾腕", "options": [
+                    {text: "笔尖指向左及左下（9点钟及以下方向）", img: "./images/gw1.png"},
+                    {text: "笔尖指向左上偏下（9点-10点钟之间方向）", img: "./images/gw2.png"},
+                    {text: "笔尖指向左上（10点-11点钟之间方向）且大拇指第二节与小臂不在一条直线上", img: "./images/gw3.png"}, 
+                    {text: "笔尖指向左上偏上（11点-12点钟之间方向）且大拇指第二节与小臂成一条直线", img: "./images/gw4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "蜷指", "options": [
+                    {text: "中指、无名指、小拇指其中有两指蜷缩，指尖紧贴掌心", img: "./images/qz1.png"},
+                    {text: "无名指、小拇指其中有一指蜷缩，指尖贴近掌心", img: "./images/qz2.png"},
+                    {text: "小拇指蜷缩，指尖贴近掌心", img: "./images/qz3.png"}, 
+                    {text: "无名指小拇指自然弯曲、并拢，垫于中指下面", img: "./images/qz4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "翘腕", "options": [
+                    {text: "书写状态下手腕离开桌面太高（腕骨离开桌面超过两根手指的高度）", img: "./images/qw1.png"},
+                    {text: "书写状态下手腕离开桌面较高（腕骨离开桌面1到2根手指的高度）", img: "./images/qw2.png"},
+                    {text: "书写状态下手腕离开桌面稍高（腕骨离开桌面小于1根手指的高度）", img: "./images/qw3.png"}, 
+                    {text: "书写状态下手腕底部贴合桌面（腕骨(手腕内侧，小拇指正下方最突出的那个小骨头)作为支撑点）", img: "./images/qw4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "躺指", "options": [
+                    {text: "中指、无名指、小拇指三根手指的侧背面接触桌面", img: "./images/tz1.png"},
+                    {text: "无名指、小拇指两根手指的侧背面接触桌面", img: "./images/tz2.png"},
+                    {text: "小拇指的侧背面接触桌面", img: "./images/tz3.png"}, 
+                    {text: "仅小拇指指尖外侧轻触桌面", img: "./images/tz4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "过伸", "options": [
+                    {text: "书写状态下有三根及以上手指伸直", img: "./images/gs1.png"},
+                    {text: "书写状态下有两根手指伸直", img: "./images/gs2.png"},
+                    {text: "书写状态下有一根手指伸直", img: "./images/gs3.png"}, 
+                    {text: "书写状态下所有手指都是自然弯曲的", img: "./images/gs4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "垫笔定位", "options": [
+                    {text: "笔杆垫在无名指上或垫在中指的第一关节以上部分", img: "./images/dw1.png"},
+                    {text: "笔杆垫在中指的第一关节处", img: "./images/dw2.png"},
+                    {text: "笔杆垫在中指的第一关节下与指甲无接触", img: "./images/dw3.png"}, 
+                    {text: "笔杆垫在中指的指甲根部侧面", img: "./images/dw4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                {"dimension": "握笔姿势", "item": "执笔距离", "options": [
+                    {text: "指尖和笔尖太近或太远（大拇指、食指、中指的指尖与笔尖紧挨着或者距离大于四根手指的宽度）", img: "./images/jl1.png"},
+                    {text: "指尖和笔尖较近或较远（大拇指、食指、中指的指尖与笔尖的距离小于一根手指或大于三根手指的宽度）", img: "./images/jl2.png"},
+                    {text: "指尖和笔尖稍近或稍远（大拇指、食指、中指的指尖与笔尖的距离大于一根手指或小于三根手指但不是两根手指的宽度）", img: "./images/jl3.png"}, 
+                    {text: "指尖和笔尖合适（大拇指、食指、中指的指尖与笔尖的距离刚好两根手指的宽度）", img: "./images/jl4.png"}
+                ], "scores": [0, 2, 5, 10]},
+                
+                {"dimension": "书写坐姿", "item": "背部形态", "options": [
+                    {text: "背部基本挺直，无弯腰驼背前倾", img: "./images/beizhi1.png"},
+                    "背部不是上述姿态，有前倾、弯腰、驼背"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "双手位置", "options": [
+                    {text: "两手和小臂摆放于桌面呈\"八字形\"", img: "./images/shuangshou1.png"},
+                    "双手臂摆放不是上述姿态，有“亻形”、“一字形”、“人字形”、“入字形”等其他姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "双脚形态", "options": [
+                    {text: "双脚平放地面，脚踏实地，与肩同宽", img: "./images/jiao1.png"},
+                    "双脚摆放不是上述姿态，有脚不着地、勾脚尖、交叉脚、二郎腿等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "头部形态", "options": [
+                    {text: "头部端正，微微前倾，无左右歪斜", img: "./images/touzheng1.png"},
+                    "头部不是上述姿态，有过度前倾、歪头等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "肩部形态", "options": [
+                    {text: "双肩放松平整，自然下垂", img: "./images/jianbang1.png"},
+                    "肩部不是上述姿态，有高低肩、耸肩、歪斜扭转等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "桌身距离", "options": [
+                    {text: "胸前距桌沿一拳距离，至少胸前衣服不挨桌沿", img: "./images/juli1.png"},
+                    "不是上述距离，有离桌太远、贴近桌沿、趴桌等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "胳膊肘位置", "options": [
+                    {text: "两只胳膊肘肘尖均露出桌沿外约一拳长度", img: "./images/zhoubu1.png"},
+                    "肘部不是上述姿态，有距离过长过短、单肘出桌、肘上桌面等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "臀膝踝角度", "options": [
+                    {text: "臀部、膝盖、脚踝均接近90°直角", img: "./images/jiaodu1.png"},
+                    "三个部位不是上述直角姿态, 有脚前伸、背前倾、腿后曲等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "放松程度", "options": [
+                    {text: "身体各部位均放松自然", img: "./images/fangsong1.png"},
+                    "身体部位不是上述放松状态,有手部肌肉紧张、肩膀脖子背部肌肉紧张等姿态"
+                ], "scores": [10, 0]},
+                {"dimension": "书写坐姿", "item": "稳定程度", "options": [
+                    {text: "身体姿态稳定，基本不会挪动，不抖不晃坐如钟，状态超过五分钟", img: "./images/wending1.png"},
+                    "稳定程度不是上述状态,有频繁抖动、摇晃、变换姿势等情况"
+                ], "scores": [10, 0]},
+                
+                {"dimension": "控笔发力", "item": "横摆竖拉", "options": ["横向笔画是通过向外摆动手腕画出，且竖向笔画是通过从上向下伸缩拉动手指画出", "横摆手腕、竖拉手指，横向和竖向笔画其中有一个是控笔发力方向正确对的", "横向笔画用伸缩手指画出、竖向笔画用向内摆动手腕或掌关节画出，横向笔画竖向笔画的发力方向均不对"], "scores": [20, 5, 0]},
+                {"dimension": "控笔发力", "item": "斜向联动", "options": ["撇（往左下）向笔画是通过向内摆动手腕画出，且捺（往右下）向笔画是通过向掌心伸缩拉动手指画出", "撇动手腕、捺动手指，撇向笔画和捺向笔画其中有一个是控笔发力方向正确对的", "撇向笔画用手指向左下前拱画出、捺向笔画用手向右下拖拽画出，撇向笔画捺向笔画的发力方向均不对"], "scores": [20, 5, 0]},
+                {"dimension": "控笔发力", "item": "钩提弹挑", "options": ["钩画短小，用中指将笔向左上或上方弹起出尖；提画稍长，用手腕将笔向右上方摆起出尖", "钩画、提画动作只有其中一个是正确的", "钩画、提画动作均不正确"], "scores": [20, 5, 0]},
+                {"dimension": "控笔发力", "item": "轻重缓急", "options": ["能灵活准确地控制笔尖的轻重和快慢，能清楚地看到笔画的粗细变化和尖脚顿弧", "勉强能控制笔尖的轻重和快慢，偶尔能看到笔画的粗细变化和尖脚顿弧", "不能控制笔尖的轻重和快慢，完全看不到笔画的粗细变化和尖脚顿弧"], "scores": [20, 5, 0]},
+                {"dimension": "控笔发力", "item": "运笔轻松", "options": ["手指手腕灵活，肌肉放松，运笔轻松自如、力度适中，笔迹均匀不浓不淡，铅笔书写背面整个笔画无凸痕", "手指手腕肌肉稍紧，不能完全灵活放松，运笔力度控制不稳，笔迹偏浓或偏淡，铅笔书写背面笔画起笔收笔处有凸痕", "肌肉僵硬、手指手腕紧张不灵活，运笔力度大，笔迹浓重，铅笔书写背面整个笔画有凸痕"], "scores": [20, 5, 0]},
 
-            userInfoScreen.classList.add('hidden');
-            assessmentScreen.classList.remove('hidden');
-            
-            // 加载第一个维度
-            loadDimension(currentDimensionIndex);
-        }
+                {"dimension": "笔画规范", "item": "形态精准度", "options": ["笔画横平、竖直；撇有尖、捺有脚，均有弧度；折有棱角、弯有圆弧；点画大小合适、角度正确；钩短提长且有尖，指向正确；掌握‘垂露竖’、‘悬针竖’、‘长横’、‘短横’等不同变体的标准写法", "横不平、竖不直、撇无尖、捺无脚、折无棱、弯不圆、点画大小不对、点画角度不对、钩长、提短、钩提无尖、钩提方向不对、基本笔画的变体书写不准确，笔画形态有其中任意一种或多种情况"], "scores": [20,  0]},
+                {"dimension": "笔画规范", "item": "笔法完整度", "options": ["起笔干净，不拖泥带水；行笔流畅平稳，没有歪扭抖动；收笔到位，没有多余的长度和角度。这是区分“画字”和“写字”的关键。", "起笔不干净，拖泥带水；行笔不流畅平稳，笔画出现歪扭抖动；收笔不到位，过长或过短、该有尖脚时无尖脚或尖脚过长变向；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
+                {"dimension": "笔画规范", "item": "空间位置感", "options": ["笔画落在关键的参照线上；平行笔画间的距离均匀；笔画间的交叉、连接点位置准确", "笔画空间位置比较随意，没有落在关键的参照线上；平行笔画间的距离不均匀；笔画间的交叉、连接点位置不准确；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
+                {"dimension": "笔画规范", "item": "关系与比例", "options": ["主要笔画（主笔）突出；多横、多竖、多撇、多点之间的长短变化与排列有规律；笔画搭配产生恰当的收敛紧凑，舒展豪放的“收放”效果", "主笔没有突出；相同笔画之间的长短变化与排列杂乱无序、毫无规律；笔画搭配缺乏明显的主笔伸展或辅助笔画收缩的状态，全都挤在一起，或者散的七零八落；笔画形态有其中任意一种或多种情况"], "scores": [20, 0]},
+                {"dimension": "笔画规范", "item": "笔顺与笔势", "options": ["遵守笔顺规则（如“先横后竖”、“先撇后捺”、“从左到右”、“从上到下”...），书写顺序正确；前一笔的收笔与后一笔的起笔存在内在的衔接趋势（笔断意连）", "不能遵守笔顺规则，书写顺序不正确，又称倒笔画；前一笔的收笔与后一笔的起笔不存在内在的衔接趋势（笔断意连）；笔画书写有其中任意一种或多种情况"], "scores": [20, 0]},
+                
+                {"dimension": "字形结构", "item": "重心与稳定", "options": ["字形视觉上端正平稳，无歪斜感。无论是独体字还是复杂结构，重心都处理得当，在格线中“站得稳”。笔画穿插后整体依然平衡", "字形基本端正，但部分字或复杂结构略有歪斜、不稳的迹象。可能有个别笔画方向不当（如横画过斜），轻微影响了整体平衡", "字形明显歪斜、倾倒，或头重脚轻、左高右低等问题突出，视觉上失衡感强烈。结构松散，难以找到稳定的重心"], "scores": [20, 5, 0]},
+                {"dimension": "字形结构", "item": "比例与协调", "options": ["字的部件（偏旁部首）之间大小、宽窄、高低关系明确且和谐。严格遵循“左紧右松”、“上紧下松”等结构规律，搭配美观", "部件比例基本正确，但存在局部失调。例如左右部分宽窄对比不够明确，或上下部分大小关系略有不当，整体略显呆板或局促", "部件比例严重失调。如左右结构的字写得左右等宽，上下结构的字上下等大，或某个部件过大/过小，导致字形怪异、不协调"], "scores": [20, 5, 0]},
+                {"dimension": "字形结构", "item": "疏密与布白", "options": ["笔画与部件间的空间分布均匀、透气，“计白当黑”意识强。穿插避让自然合理，疏密对比得当，笔画之间的空白要分布均匀，既不过于拥挤也不过于松散", "空间安排基本合理，但存在局部疏密不均<br>例如笔画密集处略显拥挤，或笔画稀疏处过于松散，整体空间感不够匀称、生动", "空间分布混乱<br>要么笔画全挤在一起，字形密不透风；要么笔画支离分散，结构松散<br>缺乏基本的穿插避让意识"], "scores": [20, 5, 0]},
+                {"dimension": "字形结构", "item": "收放与主次", "options": ["主笔（关键笔画）突出、舒展有力，次笔画相对收敛。收放对比明显，形成清晰的节奏感和视觉中心，字显得精神、有活力", "能识别主笔，但表现不够舒展或力度不足；收放对比较弱，笔画趋向于长短、力度平均，字形略显平淡，缺乏神采", "完全没有收放意识，所有笔画长短、力度相似。或主次颠倒，次要笔画过于张扬，导致字形结构紊乱、特征模糊"], "scores": [20, 5, 0]},
+                {"dimension": "字形结构", "item": "统一与规范", "options": ["单字结构符合该字的常规书写规范，且在全篇书写中，字的大小、风格高度协调统一，整体感强。快写时结构特征也能保持。字与字之间的大小关系协调，以及单字结构符合该字的常规书写规范", "单字结构基本规范，但在全篇中，字的大小控制不稳（忽大忽小），或同类结构的字写法不统一<br>快写时容易出现结构变形", "单字结构存在明显不规范写法，或自造字形<br>通篇字大小失控、风格各异，杂乱无章，缺乏整体和谐感"], "scores": [20, 5, 0]},
+                
+                {"dimension": "章法布局", "item": "字间关系", "options": ["通篇字与字之间的字距空隙大小基本一致，间隔均匀，无任何偏差，字的重心横向呈直线", "大部分字距均匀合适，不影响整齐度，行列可识别，但有的地方字挤在一起，有的地方又隔得太开，显得松紧不一", "字距毫无规律，有的紧得看不清，有的松得断了联系，整行字显得杂乱，存在字体重叠或间距过宽，行列混乱"], "scores": [20, 5, 0]},
+                {"dimension": "章法布局", "item": "行距清晰", "options": ["通篇行与行之间的行距空白清晰、宽度一致，各行文字互不干扰，无压线，纵向平行，界限清晰", "行距基本存在，但宽窄不一，或者个别行的笔画与上下行挨得太近，略有交叉感<br>轻微压线、偏差，无整行重叠，行列可区分，大部分清晰", "行距模糊不清，行与行的字都挤在一起，甚至笔画相互打架，难以区分每一行<br>多处压线，存在整行重叠，行列无法识别"], "scores": [20, 5, 0]},
+                {"dimension": "章法布局", "item": "整体协调", "options": ["通篇字的大小、高矮完全统一、重心全居中、书写风格非常一致，看起来和谐舒服，整体布局协调，浑然一体", "单个字写得不错，但通篇看去，字忽大忽小，或有的歪有的正，重心轻微偏侧，无极端突兀字，无明显违和，整体感稍差，不算杂乱", "字的大小差异悬殊，书写风格（如轻重、胖瘦）不一，整篇看起来杂乱无章<br>多个字偏差，存在超大、超小、严重歪斜字，整体杂乱不协调"], "scores": [20, 5, 0]},
+                {"dimension": "章法布局", "item": "留白合理", "options": ["页面和单个格子四周（上下左右）留出的边白宽度合适，边距均等，分布均匀，疏密有致。<br>段落开头空两格规范，整体布局看起来舒服、透气", "留边有意识，但可能一边宽一边窄，或顶天立地写得太满，段落开头空格不规范。<br>无撑边、缺边，留白无失衡，不影响观感", "几乎没有留边，字写到纸或格子的边缘；<br>或者留白过多，字缩在中间一小团；段落格式混乱；<br>边距偏差大，严重撑边、缺边，留白严重失衡"], "scores": [20, 5, 0]},
+                {"dimension": "章法布局", "item": "页面整洁", "options": ["页面干净，无不必要的涂改、墨渍。修改处使用规范修改符号，不影响阅读。无任何涂改、划痕、污渍，无多余描笔、连笔，页面整洁", "整面有3次以内的少量用橡皮或涂改液修改的痕迹，但整体不影响观感，无划痕、污渍，无大面积涂黑、反复描改，卷面可识别，基本上整洁", "涂改、擦抹、污渍较多，有大面积涂黑、划痕、污渍，页面看起来脏兮兮、乱糟糟的，影响阅读和美观"], "scores": [20, 5, 0]},
+                
+                {"dimension": "书写效率", "item": "书写速度", "options": [
+                    {text: "达到或超过年龄段正常书写速度标准", img: "./images/sudu.png"},
+                    "略低于年龄段正常书写速度（低2个字以内）", "显著低于年龄段正常书写速度（低2个字以上）"
+                ], "scores": [50, 10, 0]},
+                {"dimension": "书写效率", "item": "书写节奏", "options": ["整段书写时快慢结合，节奏稳定，无断笔、无重复修改，无停顿卡顿，整体流畅度高，一气呵成", "书写节奏基本稳定，但偶尔出现停顿或过快/过慢，偶尔断笔或修改（≤3处/100字），整体连贯流畅度一般", "书写节奏混乱，频繁卡顿或速度忽快忽慢，频繁断笔或修改（>3处/100字），连贯流畅度极差"], "scores": [50, 10, 0]}
+            ];
 
-        // 加载维度内容
-        function loadDimension(index) {
-            const dimension = assessmentData.dimensions[index];
-            const dimensionItems = assessmentStructure.filter(item => item.dimension === dimension.name);
-            
-            currentDimension.textContent = dimension.name;
-            progressText.textContent = `${index + 1}/${assessmentData.dimensions.length} 维度`;
-            
-            const progressPercentage = ((index + 1) / assessmentData.dimensions.length) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
+            // 2. 页面元素获取
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const userInfoScreen = document.getElementById('userInfoScreen');
+            const assessmentScreen = document.getElementById('assessmentScreen');
+            const resultsScreen = document.getElementById('resultsScreen');
+            const startBtn = document.getElementById('startBtn');
+            const userInfoForm = document.getElementById('userInfoForm');
+            const helpBtn = document.getElementById('helpBtn');
+            const helpModal = document.getElementById('helpModal');
+            const closeHelpBtn = document.getElementById('closeHelpBtn');
+            const closeHelpBtn2 = document.getElementById('closeHelpBtn2');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const paidContent = document.getElementById('paidContent');
+            const payPrompt = document.getElementById('payPrompt');
+            const freeNewAssessmentBtn = document.getElementById('freeNewAssessmentBtn');
+            const freeNewBtn = document.getElementById('freeNewBtn');
+            const newAssessmentBtn = document.getElementById('newAssessmentBtn');
+            const printBtn = document.getElementById('printBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const currentDimension = document.getElementById('currentDimension');
+            const dimensionContent = document.getElementById('dimensionContent');
+            const dimensionScore = document.getElementById('dimensionScore');
+            const totalScore = document.getElementById('totalScore');
+            const scoreLevel = document.getElementById('scoreLevel');
+            const scoreTableBody = document.getElementById('scoreTableBody');
+            const assessmentAdvice = document.getElementById('assessmentAdvice');
 
-            // 生成维度内容（移除分数显示）
-            dimensionContent.innerHTML = `
-                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-                    <h4 class="text-lg font-semibold text-blue-900 mb-2">${dimension.name}</h4>
-                    <p class="text-blue-700">本维度包含 ${dimension.item_count} 个项目，请在每个项目下，选择最贴近书写者真实书写状态的选项，以便更准确地反映书写者的真实书写能力水平</p>
-                </div>
-                <div class="space-y-6">
-                    ${dimensionItems.map((item, itemIndex) => `
-                        <div class="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow">
-                            <h5 class="text-md font-semibold text-gray-900 mb-4">
-                                ${itemIndex + 1}. ${item.item}
-                            </h5>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                ${item.options.map((option, optionIndex) => `
-                                    <label class="flex items-start space-x-3 p-3 border ${getSelectedClass(item, optionIndex)} cursor-pointer rounded-lg transition-colors">
-                                        <input type="radio" name="${item.item}" value="${optionIndex}" 
-                                               class="mt-1 text-blue-600 focus:ring-blue-500"
-                                               ${isOptionSelected(item, optionIndex) ? 'checked' : ''}
-                                               onchange="updateDimensionScore()">
-                                        <div>
-                                            <span class="block text-sm font-medium text-gray-900">${option}</span>
-                                        </div>
-                                    </label>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
 
-            // 更新按钮状态
-            prevBtn.classList.toggle('hidden', index === 0);
-            nextBtn.classList.toggle('hidden', index === assessmentData.dimensions.length - 1);
-            finishBtn.classList.toggle('hidden', index !== assessmentData.dimensions.length - 1);
+            // 3. 初始化变量
+            let currentDimIndex = 0; // 当前维度索引
+            let selectedScores = {}; // 存储各维度得分
+            let currentDimensionIndex = 0;
+            let assessmentResults = {};
+            let userInfo = {};
+           // 新增：付费状态（默认未付费）
+            let isPaid = false;
 
-            // 更新维度得分
-            updateDimensionScore();
-        }
+            // 5. 欢迎页开始按钮点击事件
+            startBtn.addEventListener('click', function() {
+                welcomeScreen.classList.add('hidden');
+                userInfoScreen.classList.remove('hidden');
+                // 默认填充当前日期
+                document.getElementById('assessmentDate').value = new Date().toISOString().split('T')[0];
+            });
 
-        // 获取选中样式
-        function getSelectedClass(item, optionIndex) {
-            const dimensionName = item.dimension;
-            const itemName = item.item;
-            
-            if (assessmentResults.dimensionScores[dimensionName] && 
-                assessmentResults.dimensionScores[dimensionName].itemScores[itemName] === optionIndex) {
-                return 'border-blue-500 bg-blue-50';
-            }
-            return 'border-gray-200 hover:border-blue-300';
-        }
+            // 6. 用户信息表单提交
+            userInfoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                userInfoScreen.classList.add('hidden');
+                assessmentScreen.classList.remove('hidden');
+               
+            // 初始化测评内容
+                initAssessmentContent();
+            });
 
-        // 检查选项是否选中
-        function isOptionSelected(item, optionIndex) {
-            const dimensionName = item.dimension;
-            const itemName = item.item;
-            
-            return assessmentResults.dimensionScores[dimensionName] && 
-                   assessmentResults.dimensionScores[dimensionName].itemScores[itemName] === optionIndex;
-        }
-
-        // 更新维度得分
-        function updateDimensionScore() {
-            const dimension = assessmentData.dimensions[currentDimensionIndex];
-            const dimensionItems = assessmentStructure.filter(item => item.dimension === dimension.name);
-            
-            let totalScore = 0;
-            const itemScores = {};
-            
-            dimensionItems.forEach(item => {
-                const selectedOption = document.querySelector(`input[name="${item.item}"]:checked`);
-                if (selectedOption) {
-                    const optionIndex = parseInt(selectedOption.value);
-                    const score = item.scores[optionIndex];
-                    totalScore += score;
-                    itemScores[item.item] = optionIndex;
+            // 7. 帮助模态框控制
+            helpBtn.addEventListener('click', function() {
+                helpModal.classList.remove('hidden');
+            });
+            closeHelpBtn.addEventListener('click', function() {
+                helpModal.classList.add('hidden');
+            });
+            closeHelpBtn2.addEventListener('click', function() {
+                helpModal.classList.add('hidden');
+            });
+            // 点击模态框外部关闭
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    helpModal.classList.add('hidden');
                 }
             });
 
-            // 保存维度得分
-            assessmentResults.dimensionScores[dimension.name] = {
-                score: totalScore,
-                maxScore: dimension.max_score,
-                itemScores: itemScores
-            };
+            // 8. 测评导航按钮逻辑
+            nextBtn.addEventListener('click', function() {
+                // 计算当前维度得分
+                calculateCurrentDimScore();
+                // 切换到下一个维度
+                    currentDimIndex++;
+                    if (currentDimIndex >= assessmentData.dimensions.length - 1) {
+                        nextBtn.classList.add('hidden');
+                        finishBtn.classList.remove('hidden');
+                    }
+                    prevBtn.classList.remove('hidden');
+                    updateProgress();
+                    renderDimensionContent();
+            });
 
-            // 隐藏维度得分显示（仅保留功能，不展示）
-            dimensionScore.textContent = ``;
-        }
+            prevBtn.addEventListener('click', function() {
+                currentDimIndex--;
+                if (currentDimIndex <= 0) {
+                    prevBtn.classList.add('hidden');
+                }
+                nextBtn.classList.remove('hidden');
+                finishBtn.classList.add('hidden');
+                updateProgress();
+                renderDimensionContent();
+            });
 
-        // 前往上一个维度
-        function goToPrevDimension() {
-            // 保存当前维度得分
-            updateDimensionScore();
-            
-            if (currentDimensionIndex > 0) {
-                currentDimensionIndex--;
-                loadDimension(currentDimensionIndex);
+            finishBtn.addEventListener('click', function() {
+                // 计算最终得分
+                calculateTotalScore();
+                assessmentScreen.classList.add('hidden');
+                resultsScreen.classList.remove('hidden');
+            });
+
+            // 9. 解锁付费内容
+            unlockBtn.addEventListener('click', function() {
+                       // 1. 弹出【确认支付】模拟弹窗，confirm返回布尔值：点击确定返回true，取消返回false
+                const isConfirmPay = confirm('确认支付9.9元解锁高级测评报告？（仅模拟，无实际扣费）');
+                       // 2. 判断用户是否点击确定，仅点击确定时执行后续解锁逻辑
+                if (isConfirmPay) {
+                       // 弹出【解锁成功】提示弹窗
+               alert('解锁成功！已为您显示各维度详细分析、图表及针对性改进建议～');
+                payPrompt.classList.add('hidden');
+                paidContent.classList.remove('hidden');
+                freeNewAssessmentBtn.classList.add('hidden');
+                // 生成图表和详细报告（示例）
+                generateCharts();
+                generateScoreTable();
+                generateAdvice();
+             }
+            });
+
+            // 10. 新测评按钮
+            freeNewBtn.addEventListener('click', resetAssessment);
+            newAssessmentBtn.addEventListener('click', resetAssessment);
+
+            // 11. 打印/导出按钮（占位逻辑）
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+            exportBtn.addEventListener('click', function() {
+                alert('数据导出功能已触发，实际项目中可对接Excel/JSON导出逻辑');
+            });
+
+            // --------------- 工具函数 ---------------
+            // 初始化测评内容
+            function initAssessmentContent() {
+                currentDimIndex = 0;
+                updateProgress();
+                renderDimensionContent();
             }
-        }
 
-        // 前往下一个维度
-        function goToNextDimension() {
-            // 保存当前维度得分
-            updateDimensionScore();
-            
-            if (currentDimensionIndex < assessmentData.dimensions.length - 1) {
-                currentDimensionIndex++;
-                loadDimension(currentDimensionIndex);
+            // 更新进度条
+            function updateProgress() {
+                const totalDims = assessmentData.dimensions.length;
+                const currentDims = currentDimIndex + 1;
+                const progressPercent = (currentDims / totalDims) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                progressText.textContent = `${currentDims}/${totalDims} 维度`;
+                currentDimension.textContent = assessmentData.dimensions[currentDimIndex].name;
+                // 显示当前维度得分
+                dimensionScore.textContent = `${selectedScores[assessmentData.dimensions[currentDimIndex].name] || 0}/${assessmentData.dimensions[currentDimIndex].max_score}分`;
             }
-        }
 
-        // 显示结果
-        function showResults() {
-            // 保存最后一个维度得分
-            updateDimensionScore();
-            
+            // 渲染当前维度测评内容
+            function renderDimensionContent() {
+                const currentDim = assessmentData.dimensions[currentDimIndex].name;
+                const dimItems = assessmentStructure.filter(item => item.dimension === currentDim);
+                let html = '';
+
+                dimItems.forEach((item, itemIndex) => {
+                    html += `<div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">${item.item}</h4>
+                        <div class="space-y-3">`;
+                    
+                    item.options.forEach((option, optIndex) => {
+                        const optId = `dim-${currentDimIndex}-item-${itemIndex}-opt-${optIndex}`;
+                        // 处理带图片的选项
+                        if (typeof option === 'object' && option.text && option.img) {
+                            html += `<div class="assessment-option">
+                                <label for="${optId}">
+                                    <input type="radio" name="dim-${currentDimIndex}-item-${itemIndex}" id="${optId}" value="${optIndex}" class="mr-2">
+                                    <img src="${option.img}" alt="${option.text}" class="option-img mb-2">
+                                    ${option.text}
+                                </label>
+                            </div>`;
+                        } else {
+                            html += `<div class="assessment-option">
+                                <label for="${optId}">
+                                    <input type="radio" name="dim-${currentDimIndex}-item-${itemIndex}" id="${optId}" value="${optIndex}" class="mr-2">
+                                    ${option}
+                                </label>
+                            </div>`;
+                        }
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                dimensionContent.innerHTML = html;
+            }
+
+            // 计算当前维度得分
+            function calculateCurrentDimScore() {
+                const currentDim = assessmentData.dimensions[currentDimIndex].name;
+                const dimItems = assessmentStructure.filter(item => item.dimension === currentDim);
+                let total = 0;
+
+                dimItems.forEach((item, itemIndex) => {
+                    const selectedOpt = document.querySelector(`input[name="dim-${currentDimIndex}-item-${itemIndex}"]:checked`);
+                    if (selectedOpt) {
+                        const optIndex = parseInt(selectedOpt.value);
+                        total += item.scores[optIndex] || 0;
+                    }
+                });
+
+                selectedScores[currentDim] = total;
+                dimensionScore.textContent = `${total}/${assessmentData.dimensions[currentDimIndex].max_score}分`;
+            }
+
             // 计算总分
-            let totalScore = 0;
-            Object.values(assessmentResults.dimensionScores).forEach(dimScore => {
-                totalScore += dimScore.score;
-            });
-            assessmentResults.totalScore = totalScore;
-
-            // 切换到结果页面
-            assessmentScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
-
-            // 显示结果
-            displayResults();
-        }
-
-// 显示测评结果
-function displayResults() {
-    const totalScoreEl = document.getElementById('totalScore');
-    const scoreLevelEl = document.getElementById('scoreLevel');
-    const scoreTableBody = document.getElementById('scoreTableBody');
-    const assessmentAdvice = document.getElementById('assessmentAdvice');
-    const payPrompt = document.getElementById('payPrompt');
-    const paidContent = document.getElementById('paidContent');
-    const freeNewAssessmentBtn = document.getElementById('freeNewAssessmentBtn');
-
-    // 显示总分
-    totalScoreEl.textContent = assessmentResults.totalScore;
-
-    // 计算等级
-    const scorePercentage = (assessmentResults.totalScore / assessmentData.total_max_score) * 100;
-    let scoreLevel = '优秀';
-    if (scorePercentage >= 90) scoreLevel = '优秀';
-    else if (scorePercentage >= 80) scoreLevel = '良好';
-    else if (scorePercentage >= 70) scoreLevel = '中等';
-    else if (scorePercentage >= 60) scoreLevel = '及格';
-    else scoreLevel = '需改进';
-    
-    scoreLevelEl.textContent = scoreLevel;
-
-    // 根据付费状态控制内容显示
-    if (isPaid) {
-        // 付费状态：隐藏付费提示，显示高级内容，隐藏免费版新测评按钮
-        payPrompt.classList.add('hidden');
-        paidContent.classList.remove('hidden');
-        freeNewAssessmentBtn.classList.add('hidden');
-
-        // 生成详细得分表
-        scoreTableBody.innerHTML = '';
-        assessmentData.dimensions.forEach(dimension => {
-            const dimScore = assessmentResults.dimensionScores[dimension.name] || {score: 0, maxScore: dimension.max_score};
-            const percentage = ((dimScore.score / dimScore.maxScore) * 100).toFixed(1) + '%';
-            let level = '优秀';
-            const dimPercentage = (dimScore.score / dimScore.maxScore) * 100;
-            if (dimPercentage >= 90) level = '优秀';
-            else if (dimPercentage >= 80) level = '良好';
-            else if (dimPercentage >= 70) level = '中等';
-            else if (dimPercentage >= 60) level = '及格';
-            else level = '需改进';
-
-            const row = `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${dimension.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${dimScore.score}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${dimScore.maxScore}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${percentage}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${level}</td>
-                </tr>
-            `;
-            scoreTableBody.innerHTML += row;
-        });
-
-        // 生成测评建议
-        let advice = '';
-        if (scorePercentage >= 90) {
-            advice = `
-                <p>书写能力综合表现优秀，各维度发展均衡。</p>
-                <p>建议：继续保持良好的书写习惯，可适当进行书法进阶练习，提升书写美感。</p>
-            `;
-        } else if (scorePercentage >= 80) {
-            advice = `
-                <p>书写能力整体表现良好，部分维度有提升空间。</p>
-                <p>建议：针对得分较低的维度进行专项训练，巩固书写基础。</p>
-            `;
-        } else if (scorePercentage >= 70) {
-            advice = `
-                <p>书写能力处于中等水平，多个维度需要改进。</p>
-                <p>建议：系统学习书写规范，重点纠正握笔姿势和书写坐姿，加强控笔练习。</p>
-            `;
-        } else if (scorePercentage >= 60) {
-            advice = `
-                <p>书写能力基本达标，但存在较多不规范问题。</p>
-                <p>建议：从基础的握笔、坐姿开始纠正，每天进行15-20分钟的控笔训练，逐步改善书写习惯。</p>
-            `;
-        } else {
-            advice = `
-                <p>书写能力有待提高，存在较多规范性问题。</p>
-                <p>建议：寻求专业指导，系统学习正确的书写方法，每天坚持基础训练，重点改善握笔姿势和笔画规范。</p>
-            `;
-        }
-
-        // 针对低分维度给出具体建议
-        const lowScoreDimensions = [];
-        assessmentData.dimensions.forEach(dimension => {
-            const dimScore = assessmentResults.dimensionScores[dimension.name] || {score: 0, maxScore: dimension.maxScore};
-            const dimPercentage = (dimScore.score / dimScore.maxScore) * 100;
-            if (dimPercentage < 70) {
-                lowScoreDimensions.push(dimension.name);
+            function calculateTotalScore() {
+                let total = 0;
+                // 直接累加所有7个维度得分，无模式区分
+                assessmentData.dimensions.forEach(dim => {
+                     total += selectedScores[dim.name] || 0;
+                });
+                totalScore.textContent = Math.round(total);
+                // 判定等级
+                let level = '';
+                if (total >= 600) level = '优秀';
+                else if (total >= 500) level = '良好';
+                else if (total >= 400) level = '中等';
+                else if (total >= 300) level = '待提升';
+                else level = '需改进';
+                scoreLevel.textContent = level;
+                scoreLevel.style.backgroundColor = level === '优秀' ? 'rgba(22, 163, 74, 0.2)' : 
+                                                  level === '良好' ? 'rgba(234, 179, 8, 0.2)' :
+                                                  level === '中等' ? 'rgba(59, 130, 246, 0.2)' :
+                                                  level === '待提升' ? 'rgba(249, 115, 22, 0.2)' : 'rgba(239, 68, 68, 0.2)';
             }
-        });
 
-        if (lowScoreDimensions.length > 0) {
-            advice += `<p><strong>重点改进维度：</strong>${lowScoreDimensions.join('、')}</p>`;
-            
-            lowScoreDimensions.forEach(dim => {
-                switch(dim) {
-                    case '握笔姿势':
-                        advice += `<p><strong>${dim}改进建议：</strong>使用握笔矫正器辅助训练，每天练习正确握笔姿势10分钟，确保手指摆放位置准确，力度适中。</p>`;
-                        break;
-                    case '书写坐姿':
-                        advice += `<p><strong>${dim}改进建议：</strong>调整桌椅高度，保持"一拳一尺一寸"的书写距离，书写时使用坐姿矫正器辅助，养成良好习惯。</p>`;
-                        break;
-                    case '控笔发力':
-                        advice += `<p><strong>${dim}改进建议：</strong>进行线条练习、笔画临摹等控笔训练，注重运笔的轻重缓急，提升对笔的控制能力。</p>`;
-                        break;
-                    case '笔画规范':
-                        advice += `<p><strong>${dim}改进建议：</strong>从基本笔画开始练习，对照字帖纠正笔画形状和长短，注重起笔、行笔、收笔的规范性。</p>`;
-                        break;
-                    case '字形结构':
-                        advice += `<p><strong>${dim}改进建议：</strong>学习汉字间架结构规律，先临摹后仿写，注重字形的重心和比例协调。</p>`;
-                        break;
-                    case '章法布局':
-                        advice += `<p><strong>${dim}改进建议：</strong>练习书写排版，注意字距、行距的均匀性，保持卷面整洁，提升整体书写美感。</p>`;
-                        break;
-                    case '书写速度':
-                        advice += `<p><strong>${dim}改进建议：</strong>在保证书写质量的前提下，逐步提升书写速度，进行限时书写练习，增强书写节奏感。</p>`;
-                        break;
-                }
-            });
-        }
-
-        assessmentAdvice.innerHTML = advice;
-
-        // 生成图表
-        createCharts();
-    } else {
-        // 免费状态：显示付费提示，隐藏高级内容，显示免费版新测评按钮
-        payPrompt.classList.remove('hidden');
-        paidContent.classList.add('hidden');
-        freeNewAssessmentBtn.classList.remove('hidden');
-    }
-}
-
-        // 创建图表
-        function createCharts() {
-            // 准备数据
-            const dimensionNames = assessmentData.dimensions.map(d => d.name);
-            const dimensionScores = dimensionNames.map(name => {
-                return assessmentResults.dimensionScores[name] ? assessmentResults.dimensionScores[name].score : 0;
-            });
-            const dimensionMaxScores = assessmentData.dimensions.map(d => d.max_score);
-
-            // 雷达图
-            const radarCtx = document.getElementById('radarChart').getContext('2d');
-            new Chart(radarCtx, {
-                type: 'radar',
-                data: {
-                    labels: dimensionNames,
-                    datasets: [{
-                        label: '实际得分',
-                        data: dimensionScores,
-                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
-                    }, {
-                        label: '满分',
-                        data: dimensionMaxScores,
-                        backgroundColor: 'rgba(209, 213, 219, 0.2)',
-                        borderColor: 'rgba(209, 213, 219, 1)',
-                        pointBackgroundColor: 'rgba(209, 213, 219, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(209, 213, 219, 1)',
-                        fill: true
-                    }]
-                },
-                options: {
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                stepSize: 20
+            // 生成图表（示例）
+            function generateCharts() {
+                // 雷达图
+                const radarCtx = document.getElementById('radarChart').getContext('2d');
+                const dimNames = assessmentData.dimensions.map(d => d.name);
+                const dimScores = assessmentData.dimensions.map(d => selectedScores[d.name] || 0);
+                new Chart(radarCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: dimNames,
+                        datasets: [{
+                            label: '各维度得分',
+                            data: dimScores,
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
                             }
                         }
                     }
-                }
-            });
+                });
 
-            // 柱状图
-            const barCtx = document.getElementById('barChart').getContext('2d');
-            new Chart(barCtx, {
-                type: 'bar',
-                data: {
-                    labels: dimensionNames,
-                    datasets: [{
-                        label: '得分',
-                        data: dimensionScores,
-                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
+                // 柱状图
+                const barCtx = document.getElementById('barChart').getContext('2d');
+                new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: dimNames,
+                        datasets: [{
+                            label: '得分',
+                            data: dimScores,
+                            backgroundColor: 'rgba(168, 85, 247, 0.5)',
+                            borderColor: 'rgba(168, 85, 247, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
                         }
                     }
-                }
-            });
-        }
-        // 付费解锁高级功能（模拟支付，实际项目可对接微信/支付宝支付接口）
-function unlockPaidFeatures() {
-    // 模拟支付确认弹窗
-    if (confirm('确认支付¥9.9解锁高级测评报告？（仅模拟，无实际扣费）')) {
-        // 标记为已付费
-        isPaid = true;
-        // 重新渲染结果页面（显示所有高级内容）
-        displayResults();
-        // 提示解锁成功
-        alert('解锁成功！您现在可以查看所有高级测评内容，并使用打印/导出功能。');
+                });
+            }
+
+            // 生成详细得分表
+            function generateScoreTable() {
+                let html = '';
+                assessmentData.dimensions.forEach(dim => {
+                    const score = selectedScores[dim.name] || 0;
+                    const percent = ((score / dim.max_score) * 100).toFixed(1) + '%';
+                    let level = '';
+                    if (score >= 90) level = '优秀';
+                    else if (score >= 80) level = '良好';
+                    else if (score >= 70) level = '中等';
+                    else if (score >= 60) level = '待提升';
+                    else level = '需改进';
+                    
+                    html += `<tr>
+                        <td class="px-6 py-4 whitespace-nowrap">${dim.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${score}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${dim.max_score}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${percent}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 rounded-full text-xs ${level === '优秀' ? 'bg-green-100 text-green-800' : 
+                                                                 level === '良好' ? 'bg-yellow-100 text-yellow-800' :
+                                                                 level === '中等' ? 'bg-blue-100 text-blue-800' :
+                                                                 level === '待提升' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'}">
+                                ${level}
+                            </span>
+                        </td>
+                    </tr>`;
+                });
+                scoreTableBody.innerHTML = html;
+            }
+
+            // 生成测评建议
+          function generateAdvice() {
+    // ===== 新增：定义缺失的核心变量（解决问题1）=====
+    // 1. 计算综合总分：累加所有维度得分
+    let totalScore = 0;
+    assessmentData.dimensions.forEach(dim => {
+        totalScore += selectedScores[dim.name] || 0;
+    });
+    // 2. 总分上限：取自核心数据对象assessmentData（700分）
+    const totalMaxScore = assessmentData.total_max_score;
+    // 3. 综合得分百分比：用于分档生成通用建议
+    const scorePercentage = (totalScore / totalMaxScore) * 100;
+
+    // 通用分档建议（原有逻辑保留，仅补全变量）
+    let advice = '';
+    if (scorePercentage >= 90) {
+        advice = `
+            <p>书写能力综合表现优秀，各维度发展均衡。</p>
+            <p>建议：继续保持良好的书写习惯，可适当尝试硬笔书法进阶练习，提升书写美感。</p>
+        `;
+    } else if (scorePercentage >= 80) {
+        advice = `
+            <p>书写能力整体表现良好，部分维度有提升空间。</p>
+            <p>建议：针对得分较低的维度进行专项训练，巩固现有书写基础。</p>
+        `;
+    } else if (scorePercentage >= 70) {
+        advice = `
+            <p>书写能力处于中等水平，多个维度需要改进。</p>
+            <p>建议：系统学习书写基础规范，从握笔、坐姿开始，配合基础控笔练习。</p>
+        `;
+    } else if (scorePercentage >= 60) {
+        advice = `
+            <p>书写能力基本达标，但存在较多不规范问题。</p>
+            <p>建议：从基础笔画、字形结构入手，纠正不良书写习惯，坚持每日基础练习。也可以寻求专业练字老师指导，针对薄弱维度，进行针对性训练，以便“对症下药”，精准高效改进。</p>
+        `;
+    } else {
+        advice = `
+            <p>书写能力有待提高，存在较多规范性问题。</p>
+            <p>建议：务必寻求专业练字老师指导，参考测评结果“对症下药”，针对薄弱维度，从最基础的三姿、控笔、笔画规范开始进行针对性的系统训练，以便少走弯路，从而获得精准高效的改进。</p>
+        `;
     }
-}
 
-// 免费版新测评按钮事件
-function freeNewAssessment() {
-    // 重置状态（包括付费状态）
-    currentDimensionIndex = 0;
-    assessmentResults = {};
-    userInfo = {};
-    isPaid = false; // 重置付费状态
-
-    // 重置表单
-    userInfoForm.reset();
-    document.getElementById('assessmentDate').value = new Date().toISOString().split('T')[0];
-
-    // 返回欢迎界面
-    resultsScreen.classList.add('hidden');
-    welcomeScreen.classList.remove('hidden');
-}
-
-        // 显示帮助
-        function showHelp() {
-            helpModal.classList.remove('hidden');
+    // 针对低分维度给出具体建议
+    const lowScoreDimensions = [];
+    assessmentData.dimensions.forEach(dimension => {
+        // ===== 修正：数据引用改为原有核心变量selectedScores（解决问题2）=====
+        const dimScore = selectedScores[dimension.name] || 0; // 维度实际得分
+        const dimMaxScore = dimension.max_score; // 维度满分
+        const dimPercentage = (dimScore / dimMaxScore) * 100;
+        if (dimPercentage < 70) {
+            lowScoreDimensions.push(dimension.name);
         }
+    });
 
-        // 隐藏帮助
-        function hideHelp() {
-            helpModal.classList.add('hidden');
-        }
+    if (lowScoreDimensions.length > 0) {
+        advice += `<p><strong>重点改进维度：</strong>${lowScoreDimensions.join('、')}</p>`;
+        
+        lowScoreDimensions.forEach(dim => {
+            switch(dim) {
+                case '握笔姿势':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行握笔姿势矫正训练，每天练习正确握笔姿势5-10分钟，确保手指摆放位置准确，力度适中；
+<br>2.从少量、高频的专项练习开始，学龄段孩子的家长要多鼓励、少指责，逐步养成肌肉记忆；
+<br>3.改进握笔姿势是一场需要耐心和方法的“微习惯”养成战。需要足够的耐心，也需要运用正确的工具和方法；
+<br>4.配合合适的工具（如较粗的三角杆、有凹槽的铅笔、记忆口诀歌谣、参照《正姿大法》第五招至第八招等）效果更佳；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '书写坐姿':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行坐姿的矫正训练，在握笔姿势正确的前提下，保持正确合理的书写距离与姿态；
+<br>2.良好坐姿依赖于合适的桌椅高度，家庭中可以适当调整桌椅高度，以便与身高向匹配，逐步养成主动纠正坐姿的习惯；
+<br>3.纠正初期，学龄段孩子的家长要多鼓励、少指责，也需要更多的耐心提醒，并结合工具辅助，帮助其将正确姿势转化为下意识的习惯；
+<br>4.配合合适的工具（如高度合适的书桌和板凳、摆放位置正确的台灯、家庭固定的书写区域、记忆口诀歌谣、参照《正姿大法》第一招至第四招等）效果更佳；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '控笔发力':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行控笔发力的矫正训练，在握笔姿势和坐姿正确的前提下，每天进行横竖锯齿线、沙漏蝴蝶结线、正反蜗牛线、正反迷宫线、上下鱼骨线等控笔线条的训练5-10分钟；
+<br>2.正确发力是书写流畅轻松的关键。正确的握笔和坐姿是科学发力的前提。如果笔都握错了，发力不可能正确。所以需与正确的握笔姿势和坐姿结合练习；
+<br>3.控笔发力的改进，本质是从“僵硬的体力劳动”转向“协调的神经控制”。注重运笔的轻重缓急，提升对笔的控制能力，重点感受运笔过程中的松弛感与节奏感，而非将字“刻”在纸上；
+<br>4.通过针对性的放松练习和分解动作训练，让书写者逐步体会并掌握那种举重若轻的书写感觉，感受“轻起笔、稳行笔、慢收笔”的控笔节奏，逐步养成肌肉记忆；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '笔画规范':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行笔画规范的矫正训练，在握笔姿势、坐姿和控笔发力都正确的前提下，从基本笔画开始，对照字帖纠正笔画的形状、长短和角度，注重起笔、行笔、收笔的规范性；
+<br>2.笔画规范是书写美感的基石。纠正需从慢速、放大的专项练习开始，使用米字格纸、田字格纸、描红本等工具辅助定位；
+<br>3.学龄段孩子的家长在检查时，应重点关注笔画的起笔、收笔形状和在格子中的位置，而非仅仅看整个字的外轮廓；
+<br>4.用游戏化的方式，从“写像一个笔画”开始，耐心地、有步骤地练习，不贪多，坚持练一个像一个，书写一定会一天比一天更规范、更漂亮；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '字形结构':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行字形结构的矫正训练，在握笔姿势、坐姿、控笔发力和笔画都正确规范的前提下，先临摹后仿写，熟记汉字间架结构规律，注重字形的重心和比例协调；
+<br>2.结构问题需从整体观察入手。建议多用 “临摹对比法”（将书写字与范字重叠对比），并借助格子辅助线进行“定位-观察-修正”的循环练习，逐步建立稳定的结构感；
+<br>3.字形结构就是汉字的“建筑学”。对于学龄段孩子的家长，应带着孩子从“把房子盖正”开始，再到“把房间分配好”，最后“装饰出漂亮的屋顶”；
+<br>4.掌握“横平竖直、重心居中”的技巧，带着“主笔突出”的意识书写，用游戏的心态，每天用5-10分钟的时间，练习一点点，字一定会从“松散歪斜”变得“挺拔神气”；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '章法布局':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.参照每个项目下的选项内容，运用实用有效的方法进行章法布局的矫正训练，在握笔姿势、坐姿、控笔发力、笔画、字形结构都正确规范的前提下，练习书写排版，保持卷面整洁，提升整体书写美感；
+<br>2.良好的章法依赖书写前的规划。初期多用带格子的纸张辅助练习，通过抄写一句话开始，逐步到抄写一个段落，进行专项练习，刻意控制字距和行距的均匀性，重点培养对字距、行距和页边距的整体把控能力和整体布局美感；
+<br>3.整洁的卷面是书写习惯与学习态度的直观体现。章法布局是书写的“大局观”。引导书写者从“写好一个字”升级到“安排好一整页”，这不仅是书写技巧，更是思维条理性和审美能力的综合锻炼；
+<br>4.养成书写前规划篇幅的良好习惯，提升整体排版能力；整段书写练习，锻炼布局协调性，用布置花园的心态去书写，学龄段孩子的作业面貌必将焕然一新；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+                case '书写效率':
+                    advice += `<p><strong>${dim}改进建议：</strong><br>1.在握笔姿势、坐姿、控笔发力、笔画、字形结构、章法布局都正确规范的前提下，保证书写质量，按照书写笔画顺序，从练习笔画节奏入手，逐步加快节奏频率，提升书写速度，一定要进行限时书写练习，增强书写节奏感；
+<br>2.效率提升应遵循 “先准后快，快中求稳” 的原则。日常可通过 “一分钟工整字挑战” 等游戏进行训练，核心是在确保最低质量底线（清晰、可辨） 的前提下，逐步找到并稳定自己的最佳书写节奏；
+<br>3.提升书写效率，是一场关于熟练度、节奏感和态度的综合修炼。正确的笔顺、连贯的笔势、流畅的节奏、认真对待的态度，才能造就又快又好的书写；
+<br>4.通过科学的练习，通过限时书写训练，提升书写速度的同时修炼稳定性和连贯性，从根本找到属于自己的最佳书写节奏，能够从容、清晰地应对各种书写任务，获得真正的成就感；
+<br>5.如果自主改进有困难，建议寻求专业练字老师指导，“对症下药”，进行针对性训练。</p>`;
+                    break;
+            }
+        });
+    }
 
-        // 打印报告
-        function printReport() {
-            window.print();
-        }
+    // 将生成的建议插入页面DOM（原有逻辑保留）
+    assessmentAdvice.innerHTML = advice;
+            }
 
-        // 导出数据
-        function exportData() {
-            const data = {
-                userInfo: assessmentResults.userInfo,
-                totalScore: assessmentResults.totalScore,
-                totalMaxScore: assessmentData.total_max_score,
-                dimensionScores: assessmentResults.dimensionScores,
-                assessmentDate: new Date().toISOString()
-            };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `HSBE测评报告_${userInfo.name}_${userInfo.date}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // 开始新测评
-        function startNewAssessment() {
-            // 重置状态
-            currentDimensionIndex = 0;
-            assessmentResults = {};
-            userInfo = {};
-            isPaid = false; // 新增：重置付费状态
-
-            // 重置表单
-            userInfoForm.reset();
-            document.getElementById('assessmentDate').value = new Date().toISOString().split('T')[0];
-
-            // 返回欢迎界面
-            resultsScreen.classList.add('hidden');
-            welcomeScreen.classList.remove('hidden');
-        }
+            // 重置测评
+            function resetAssessment() {
+                // 重置变量
+                currentDimIndex = 0;
+                selectedScores = {};
+                assessmentMode = 'full';
+                // 重置UI
+                resultsScreen.classList.add('hidden');
+                welcomeScreen.classList.remove('hidden');
+                dimensionSelect.classList.add('hidden');
+                fullAssessment.checked = true;
+                singleDimension.checked = false;
+                // 清空表单
+                userInfoForm.reset();
+              }
+            });
     </script>
+</body>
 </html>
